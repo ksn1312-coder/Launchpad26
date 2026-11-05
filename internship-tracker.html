@@ -1,0 +1,206 @@
+<title>Internship Radar 2027</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: filter bar on top, one row per programme; tap a row to see its selection process */
+:root{
+  --bg:#f6f7f9; --panel:#ffffff; --fg:#17202e; --muted:#5b6678; --line:#dde2ea;
+  --accent:#1f5fbf; --accent-soft:#e6eefb;
+  --open:#13794a; --open-bg:#e3f4ea; --soon:#9a5b00; --soon-bg:#fbf0dc; --closed:#8a3a3a; --closed-bg:#f6e6e6;
+  --display:"Bricolage Grotesque",system-ui,sans-serif; --body:"Source Sans 3",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10151d; --panel:#171e29; --fg:#e7ecf3; --muted:#9aa6b8; --line:#2a3444;
+  --accent:#7fb0ff; --accent-soft:#1d2a40;
+  --open:#6fd3a0; --open-bg:#173226; --soon:#f0be6a; --soon-bg:#35290f; --closed:#f09a9a; --closed-bg:#3a1e1e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10151d; --panel:#171e29; --fg:#e7ecf3; --muted:#9aa6b8; --line:#2a3444;
+  --accent:#7fb0ff; --accent-soft:#1d2a40;
+  --open:#6fd3a0; --open-bg:#173226; --soon:#f0be6a; --soon-bg:#35290f; --closed:#f09a9a; --closed-bg:#3a1e1e; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--body)}
+.wrap{max-width:1040px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+h1{font:800 clamp(1.8rem,4vw,2.6rem)/1.1 var(--display);margin:0;text-wrap:balance}
+h2{font:600 1.25rem/1.2 var(--display);margin:0 0 10px}
+.lede{color:var(--muted);max-width:68ch;margin:6px 0 0}
+.asof{font:500 .78rem var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.verdict div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.verdict b{display:block;font-family:var(--display);font-size:1.02rem;margin-bottom:4px}
+.verdict p{margin:0;color:var(--muted);font-size:.95rem}
+.filters{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.group{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.group span{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-right:2px}
+button.chip{font:600 .9rem var(--body);border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:999px;padding:5px 12px;cursor:pointer}
+button.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+button.chip:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.count{font:500 .8rem var(--mono);color:var(--muted)}
+.list{display:grid;gap:8px}
+details{background:var(--panel);border:1px solid var(--line);border-radius:10px}
+summary{list-style:none;cursor:pointer;padding:12px 16px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) auto;gap:12px;align-items:center}
+summary::-webkit-details-marker{display:none}
+.co{font:600 1.05rem var(--display)}
+.role{color:var(--muted);font-size:.92rem}
+.meta{font-size:.88rem;color:var(--muted)}
+.pill{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.05em;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.open{color:var(--open);background:var(--open-bg)} .soon{color:var(--soon);background:var(--soon-bg)} .closed{color:var(--closed);background:var(--closed-bg)}
+.body{padding:0 16px 16px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;border-top:1px solid var(--line);padding-top:14px}
+.body h3{font:500 .72rem var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 6px}
+.body ol{margin:0;padding-left:20px} .body li{margin-bottom:3px}
+.body dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.93rem}
+.body dt{color:var(--muted)} .body dd{margin:0}
+.body a{color:var(--accent)}
+.tip{grid-column:1/-1;background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:.93rem}
+.li{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+.li ol{margin:0;padding-left:20px;display:grid;gap:8px}
+code{font:500 .85rem var(--mono);background:var(--accent-soft);padding:2px 6px;border-radius:4px;word-break:break-word}
+.copy{font:600 .8rem var(--body);margin-left:6px;border:1px solid var(--line);background:transparent;color:var(--accent);border-radius:6px;padding:1px 8px;cursor:pointer}
+.empty{color:var(--muted);padding:12px}
+footer{color:var(--muted);font-size:.85rem}
+.filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+@media (max-width:640px){
+  .wrap{padding-block:18px 40px;gap:16px}
+  .verdict{grid-template-columns:1fr}
+  .filters{flex-direction:column;align-items:stretch;gap:8px}
+  .group{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+  .group::-webkit-scrollbar{display:none}
+  .group span{min-width:52px}
+  button.chip{min-height:40px;padding:8px 14px;white-space:nowrap;flex:none}
+  summary{grid-template-columns:1fr auto;padding:14px}
+  .meta{grid-column:1/-1}
+  .body{grid-template-columns:1fr;padding:14px}
+  .body dl{grid-template-columns:1fr;gap:0}
+  .body dd{margin-bottom:8px}
+  .copy{min-height:32px;padding:4px 10px}
+  .li ol{padding-left:18px}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="asof">Status checked 5 Nov 2026 · India</div>
+    <h1>Internship Radar 2027</h1>
+    <p class="lede">Internship programmes for 3rd-year (2028 batch, summer 2027) and 4th-year (2027 batch, Jan–Jun 2027) engineering students, with each company's selection process. Tap a row for the steps.</p>
+  </header>
+
+  <section class="verdict" aria-label="Where things stand">
+    <div><b>3rd year: the big-tech summer windows mostly closed</b><p>Google, Microsoft SWE, Goldman Sachs and Salesforce took applications between June and October 2026. What's still live: Intuit, Microsoft non-SWE roles, JPMorgan (rolling), core-company programmes and startups.</p></div>
+    <div><b>4th year: 6-month internships are the play</b><p>Amazon's SDE intern (Jan–Jun 2027 start) is open. Qualcomm, MongoDB and similar run winter/6-month tracks that often convert to full-time offers.</p></div>
+    <div><b>Core branches: Dec–Jan is the window</b><p>Reliance GET's last cycle closed 16 Jan, so expect the 2028-batch cycle around Dec 2026–Jan 2027. Tata, L&T and Baker Hughes post on their own portals.</p></div>
+  </section>
+
+  <section class="filters" aria-label="Filters">
+    <div class="group" data-key="year"><span>Year</span>
+      <button class="chip" id="y-all" data-v="all" aria-pressed="true">All</button>
+      <button class="chip" id="y-3" data-v="3" aria-pressed="false">3rd year</button>
+      <button class="chip" id="y-4" data-v="4" aria-pressed="false">4th year</button>
+    </div>
+    <div class="group" data-key="track"><span>Track</span>
+      <button class="chip" id="t-all" data-v="all" aria-pressed="true">All</button>
+      <button class="chip" id="t-sw" data-v="sw" aria-pressed="false">Software</button>
+      <button class="chip" id="t-core" data-v="core" aria-pressed="false">Core</button>
+      <button class="chip" id="t-fin" data-v="fin" aria-pressed="false">Finance-tech</button>
+      <button class="chip" id="t-gov" data-v="gov" aria-pressed="false">Government</button>
+    </div>
+    <div class="group" data-key="status"><span>Status</span>
+      <button class="chip" id="s-all" data-v="all" aria-pressed="true">All</button>
+      <button class="chip" id="s-open" data-v="open" aria-pressed="false">Open</button>
+      <button class="chip" id="s-soon" data-v="soon" aria-pressed="false">Upcoming</button>
+      <button class="chip" id="s-closed" data-v="closed" aria-pressed="false">Closed</button>
+    </div>
+    <div class="count" id="count"></div>
+  </section>
+
+  <section class="list" id="list" aria-live="polite"></section>
+
+  <section class="li">
+    <h2>Using LinkedIn to find the rest</h2>
+    <ol>
+      <li><b>Jobs search with a 24-hour filter.</b> Search <code>intern 2028 batch</code><button class="copy" data-c="intern 2028 batch">Copy</button> or <code>summer intern 2027</code><button class="copy" data-c="summer intern 2027">Copy</button>, set location to India, Experience level = Internship, Date posted = Past 24 hours. Save the search and turn on the alert.</li>
+      <li><b>Posts search, not just Jobs.</b> Startups and many recruiters announce roles only as posts. Search Posts for <code>"hiring interns" 2028 batch</code><button class="copy" data-c="&quot;hiring interns&quot; 2028 batch">Copy</button>, sorted by Latest. Pages like "SDE Jobs and Internships" aggregate these daily with batch and stipend.</li>
+      <li><b>Follow the university-recruiting pages.</b> Google Students, Microsoft Students & Graduates, Amazon University, Goldman Sachs Campus, Qualcomm Careers. They post the exact day a window opens.</li>
+      <li><b>Referrals beat cold applies.</b> Find alumni of the student's college at the target company (People search → company → school filter). Send a 3-line note with the Job ID and resume link; ask for a referral, not a job.</li>
+      <li><b>Make the profile recruiter-searchable.</b> Headline with branch + batch + 2–3 skills (e.g. "CSE '28 · Python · ML · Open to Summer 2027 internships"), Open to Work set to Internship, projects with GitHub links in Featured.</li>
+    </ol>
+  </section>
+
+  <footer>Statuses come from company career pages and job aggregators found on 5 Nov 2026. Stipend figures are third-party reports, not company-published. Confirm on the official portal before applying; no legitimate programme charges a fee.</footer>
+</div>
+
+<script>
+const D=[
+ {co:"Amazon",role:"SDE Intern (6 months)",year:["4"],track:"sw",status:"open",loc:"Bengaluru, Chennai, Hyderabad, Delhi, Mumbai, Pune",when:"Start Jan–Jun 2027; rolling",elig:"BE/BTech/ME CS or related, 2027 grads",stipend:"~₹1.1–1.4L/mo (reported)",
+  steps:["Apply on amazon.jobs (one application covers all India locations)","Online assessment: 2 coding problems + work-style survey","1–2 technical interviews (DSA, problem solving) with Leadership Principles questions","Offer; strong performers convert to SDE-1"],
+  tip:"Must be free full-time for the whole 6 months, so confirm college allows a final-semester internship.",url:"https://www.amazon.jobs/en/teams/internships-for-students"},
+ {co:"Intuit",role:"Software Engineering Intern, Summer 2027",year:["3"],track:"sw",status:"open",loc:"Bengaluru",when:"Summer 2027",elig:"BE/BTech or integrated ME/MTech, CS or related, returning to studies after",stipend:"Not published",
+  steps:["Apply on Intuit careers (Job ID 22939)","Online coding assessment","Technical interviews at full-time hiring bar (DSA + design basics)","Hiring-manager / culture round"],
+  tip:"Seats fill fast; apply this week.",url:"https://jobs.intuit.com/"},
+ {co:"Microsoft",role:"Software Engineering Intern (India)",year:["3"],track:"sw",status:"closed",loc:"Bengaluru, Hyderabad, Noida",when:"Posted 18 Sep 2026, closed by 30 Oct",elig:"Pre-final year; 1 yr OOP programming",stipend:"Not published",
+  steps:["Online application with resume","Online coding assessment","2–3 technical interviews","Final round with team matching"],
+  tip:"Applied Sciences, Security Research, Product Design and Product Management intern roles were still open at end-October. Next SWE posting expected around Sep 2027.",url:"https://careers.microsoft.com/v2/global/en/students"},
+ {co:"Microsoft",role:"Applied Sciences / Security Research / PM Intern",year:["3"],track:"sw",status:"open",loc:"India, multiple",when:"Summer 2027",elig:"Pre-final year, role-specific skills",stipend:"Not published",
+  steps:["Apply per role on Microsoft careers","Screening + role-specific assessment","Technical / case interviews","Team match and offer"],
+  tip:"Good fallback for CSE students with ML or security projects.",url:"https://careers.microsoft.com/v2/global/en/students"},
+ {co:"Google",role:"Software Engineering Intern, Summer 2027",year:["3"],track:"sw",status:"closed",loc:"Bengaluru, Hyderabad, Pune",when:"Closed ~28 Jun 2026",elig:"Penultimate year BE/BTech/ME CS or related",stipend:"Not published (reported ₹80K–1.2L/mo)",
+  steps:["Resume + transcript on Google Careers","Online coding challenge","2 technical interviews (DSA, 45 min each)","Host matching with a team, then offer"],
+  tip:"Opens again around May–June 2027 for summer 2028. Set an alert now.",url:"https://www.google.com/about/careers/applications/students/"},
+ {co:"Google",role:"Application Engineering Intern, Summer 2027",year:["3"],track:"sw",status:"closed",loc:"Bengaluru",when:"Closed 15 Sep 2026",elig:"Students graduating 2028",stipend:"Reported ~₹1L/mo",
+  steps:["Online application","Coding / technical screen","Technical interviews","Host matching"],tip:"",url:"https://www.google.com/about/careers/applications/students/"},
+ {co:"Goldman Sachs",role:"2027 Summer Analyst (Engineering)",year:["3"],track:"fin",status:"closed",loc:"Bengaluru, Hyderabad",when:"Opened 1 Jul, deadline 4 Oct 2026",elig:"Pre-final year, graduating 2028",stipend:"Not published",
+  steps:["Apply on higher.gs.com, pick division","Online test: aptitude, quant, logical reasoning, coding","Video / HireVue interview","Technical + behavioural Superday interviews"],
+  tip:"Next cycle opens 1 July 2027. Engineering final-years apply to the New Analyst programme instead.",url:"https://higher.gs.com/"},
+ {co:"JPMorgan Chase",role:"2027 Summer Analyst (Software Engineering)",year:["3"],track:"fin",status:"soon",loc:"Bengaluru, Hyderabad, Mumbai",when:"Rolling; India dates not yet published",elig:"Pre-final year",stipend:"Not published",
+  steps:["Apply on JPMC careers","HireVue video + online coding test","Code for Good hackathon or technical interview","Final interview and offer"],
+  tip:"Code for Good hackathon is a common entry route; watch their campus pages.",url:"https://careers.jpmorgan.com/in/en/students"},
+ {co:"Salesforce",role:"Futureforce Summer 2027 SWE Intern",year:["3"],track:"sw",status:"closed",loc:"Bengaluru, Hyderabad",when:"Closed 24 Jul 2026",elig:"Class of 2028",stipend:"Among the highest in India (reported)",
+  steps:["Apply on Salesforce Workday (max 3 roles in 12 months)","Online coding assessment","2 technical interviews","Hiring-manager round"],tip:"",url:"https://careers.salesforce.com/en/futureforce/"},
+ {co:"LinkedIn",role:"India Engineering Internship",year:["3"],track:"sw",status:"soon",loc:"Bengaluru",when:"12 weeks, May–July",elig:"Pre-final year CS or related",stipend:"Not published",
+  steps:["Register interest on LinkedIn's India internship page","Online coding assessment","Technical interviews (infra, ML, AI teams)","Offer"],
+  tip:"Register on the talent page so you're notified when the 2027 cohort opens.",url:"https://linkedin.avature.net/LinkedinIndiaInternship"},
+ {co:"Qualcomm",role:"Interim Engineering Intern (HW / SW)",year:["3","4"],track:"core",status:"open",loc:"Chennai, Hyderabad, Bengaluru",when:"Rolling, 3–6 months",elig:"ECE/EEE/CSE; RTL, Verilog, embedded C/C++",stipend:"Not published",
+  steps:["Apply on Qualcomm careers","Online test (digital electronics / C / aptitude)","Technical interviews on domain fundamentals","Manager round; mentor assigned on joining"],
+  tip:"One of the few strong semiconductor options with a Chennai location.",url:"https://careers.qualcomm.com/"},
+ {co:"Reliance Industries",role:"GET Summer Internship",year:["3"],track:"core",status:"soon",loc:"Pan-India plants (Jamnagar, Hazira etc.)",when:"Last cycle deadline 16 Jan 2026; expect Dec 2026–Jan 2027",elig:"3rd-year Chemical, Mechanical, Electrical, Instrumentation, Metallurgy, Fire",stipend:"Not published",
+  steps:["Online application on Reliance careers","Academic cut-off screening","Online assessment (technical + aptitude)","Interview, then plant allocation"],
+  tip:"Strong PPO pipeline into the GET programme.",url:"https://careers.ril.com/"},
+ {co:"Baker Hughes",role:"Emerging Talent: Engineering & Technology Intern 2027",year:["3","4"],track:"core",status:"open",loc:"Bengaluru, Pune",when:"2027",elig:"Mech, Electrical, Instrumentation, Electronics, CS/IT",stipend:"Not published",
+  steps:["Apply on Baker Hughes careers","Online assessment","Technical + behavioural interviews","Offer"],tip:"",url:"https://careers.bakerhughes.com/"},
+ {co:"Tata Group",role:"Tata Steel / Tata Motors / TAS summer interns",year:["3"],track:"core",status:"soon",loc:"Jamshedpur, Pune, Mumbai",when:"May–Jun 2027 starts",elig:"Core branches (Metallurgy, Mech); TAS is management",stipend:"Reported ₹12–15K/mo for core roles",
+  steps:["Apply via company careers / campus","Resume shortlist","Online test or GD","Technical / HR interview"],
+  tip:"Many Tata core internships route through campus placement cells; check with the T&P office first.",url:"https://www.tatasteel.com/careers/"},
+ {co:"L&T / L&T Technology Services",role:"Civil, structural, embedded interns",year:["3"],track:"core",status:"soon",loc:"Chennai, Mysuru",when:"Summer 2027",elig:"Civil, Mech, ECE",stipend:"Reported ₹10–15K/mo",
+  steps:["Apply via L&T careers or campus","Resume shortlist","Technical interview (STAAD/AutoCAD or embedded C)","Offer"],
+  tip:"Chennai headquarters makes this easy to pursue in person.",url:"https://www.larsentoubro.com/corporate/careers/"},
+ {co:"Honeywell",role:"Intern, Bachelors (AI Eng / Hardware Eng)",year:["3","4"],track:"sw",status:"open",loc:"Hyderabad",when:"Rolling",elig:"2027 and 2028 batches",stipend:"Reported ₹50–60K/mo",
+  steps:["Apply on Honeywell careers","Online assessment","Technical interview","Manager round"],tip:"",url:"https://careers.honeywell.com/"},
+ {co:"IBM Research",role:"Research Intern – AI",year:["3","4"],track:"sw",status:"open",loc:"Bengaluru, Gurgaon",when:"Rolling",elig:"BE/BTech/ME/PhD, 2027–2028 batches",stipend:"Reported ₹50–60K/mo",
+  steps:["Apply on IBM careers","Resume + research/project screen","Technical interview with a research mentor","Offer"],
+  tip:"A published paper or Kaggle/open-source work moves the needle here.",url:"https://www.ibm.com/careers"},
+ {co:"Indian Army (IAIP 2026-27)",role:"Indian Army Internship Programme: ~43 projects in AI/ML, cyber security, drones, full-stack",year:["3","4"],track:"gov",status:"open",loc:"New Delhi/NCR mainly; Southern Command, Pune; Northern Command",when:"Rolling, each project has its own closing date; Pune batch ~16 Nov 2026–31 Jan 2027",elig:"AICTE-approved BE/BTech (CSE, ECE, AI/ML, Data Science, Cyber) and other courses; varies by project",stipend:"Up to ₹75,000 total, paid on completion, linked to 75% attendance",
+  steps:["Register on the AICTE National Internship Portal and open the Indian Army dashboard","Pick projects and check each one's skills and closing date; apply to several (only one offer can be accepted)","Shortlisting by the Army formation running the project (criteria not published)","Mandatory police verification before joining","75 days: 60 on-site + 15 work-from-home; up to 15 AICTE credits and an Army certificate"],
+  tip:"No accommodation, Mon–Sat 9:30–5:30, formal dress, personal devices restricted on premises. Many Aug 2026 listings have lapsed, so filter for live projects. No job guarantee.",url:"https://internship.aicte-india.org/dashboards/indianarmy"},
+ {co:"Startups (via LinkedIn)",role:"SDE / AI / data interns with PPO",year:["3","4"],track:"sw",status:"open",loc:"Remote, Bengaluru, Gurugram",when:"Continuous",elig:"Often 2026–2028 batches",stipend:"₹15K–80K/mo seen in recent posts",
+  steps:["Find via LinkedIn Posts search or aggregator pages","Short take-home task or live coding","Founder / tech-lead call","Offer within days"],
+  tip:"Fastest route to real work for a 3rd-year who missed the big-tech window. Check the company's funding and the PPO terms.",url:"https://www.linkedin.com/jobs/"}
+];
+const st={year:"all",track:"all",status:"all"};
+const label={open:"Open",soon:"Upcoming",closed:"Closed"};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function render(){
+  const rows=D.filter(r=>(st.year==="all"||r.year.includes(st.year))&&(st.track==="all"||r.track===st.track)&&(st.status==="all"||r.status===st.status));
+  const order={open:0,soon:1,closed:2}; rows.sort((a,b)=>order[a.status]-order[b.status]);
+  document.getElementById("count").textContent=rows.length+" of "+D.length+" programmes";
+  document.getElementById("list").innerHTML=rows.length?rows.map(r=>`<details><summary><div><div class="co">${esc(r.co)}</div><div class="role">${esc(r.role)}</div></div><div class="meta">${r.year.map(y=>y+(y==="3"?"rd":"th")).join(" · ")} year · ${esc(r.loc)}</div><span class="pill ${r.status}">${label[r.status]}</span></summary><div class="body"><div><h3>Selection process</h3><ol>${r.steps.map(s=>`<li>${esc(s)}</li>`).join("")}</ol></div><div><h3>Details</h3><dl><dt>Window</dt><dd>${esc(r.when)}</dd><dt>Eligibility</dt><dd>${esc(r.elig)}</dd><dt>Stipend</dt><dd>${esc(r.stipend)}</dd><dt>Apply</dt><dd><a href="${r.url}" target="_blank" rel="noopener">Official page</a></dd></dl></div>${r.tip?`<div class="tip">${esc(r.tip)}</div>`:""}</div></details>`).join(""):'<div class="empty">No programmes match these filters.</div>';
+}
+document.querySelectorAll(".group").forEach(g=>g.addEventListener("click",e=>{
+  const b=e.target.closest("button.chip"); if(!b) return;
+  st[g.dataset.key]=b.dataset.v;
+  g.querySelectorAll("button.chip").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+  render();
+}));
+document.querySelectorAll(".copy").forEach(b=>b.addEventListener("click",()=>{
+  const t=b.dataset.c;
+  navigator.clipboard.writeText(t).then(()=>{b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1200)}).catch(()=>{const c=b.previousElementSibling;const r=document.createRange();r.selectNodeContents(c);const s=getSelection();s.removeAllRanges();s.addRange(r)});
+}));
+render();
+</script>
